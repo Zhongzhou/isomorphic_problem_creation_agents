@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multiple-choice bank input</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1c1915;
+      --muted: #5c564e;
+      --line: #d9d3c8;
+      --paper: #fffcf7;
+      --card: #ffffff;
+      --accent: #1f4b3a;
+      --accent-ink: #ffffff;
+      --danger: #8a2e2e;
+      --see: #1d4e89;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.45 "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    header, main { max-width: 52rem; margin: 0 auto; padding: 1.25rem 1rem 2rem; }
+    header { padding-bottom: 0; }
+    h1 { font-size: 1.6rem; margin: 0 0 0.35rem; }
+    h2 { font-size: 1.15rem; margin: 0 0 0.75rem; }
+    p { margin: 0.35rem 0; }
+    .lede { color: var(--muted); max-width: 40rem; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    button, select, input, textarea {
+      font: inherit;
+      color: inherit;
+    }
+    button {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      cursor: pointer;
+    }
+    button:hover { border-color: #b7b0a4; }
+    button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+    button.danger { color: var(--danger); }
+    button.see {
+      border: 0;
+      background: transparent;
+      color: var(--see);
+      text-decoration: underline;
+      padding: 0;
+    }
+    button.remove { color: var(--danger); padding: 0.15rem 0.45rem; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 0.6rem;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .field, .repeat { margin: 0.85rem 0; }
+    .field-label,     .row-label {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.3rem;
+    }
+    .row-label h2 { margin: 0; }
+    label { font-weight: 650; }
+    .hint { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.35rem; }
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 0.35rem;
+      padding: 0.45rem 0.55rem;
+      background: #fff;
+    }
+    textarea { min-height: 4.5rem; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #c5d4c8;
+      border-color: var(--accent);
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .scenario {
+      border-top: 1px solid var(--line);
+      margin-top: 0.75rem;
+      padding-top: 0.25rem;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f4f1ea;
+      border-radius: 0.4rem;
+      padding: 0.8rem;
+      margin: 0;
+    }
+    dialog {
+      border: 1px solid var(--line);
+      border-radius: 0.6rem;
+      max-width: 36rem;
+      width: calc(100% - 2rem);
+      padding: 1rem 1rem 0.8rem;
+    }
+    dialog::backdrop { background: rgba(28, 25, 21, 0.35); }
+    dialog h3 { margin: 0 0 0.6rem; font-size: 1.05rem; }
+    dialog .actions { justify-content: flex-end; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Multiple-choice isomorphic problem bank design</h1>
+    <p class="lede">Fill as many field as you can, then download the YAML to create the bank by an AI agent. You can add scenarios, variations, and choice items. </p>
+    <div class="toolbar">
+      <button type="button" id="load-example">Load complete example</button>
+      <button type="button" id="clear-all" class="danger">Clear all</button>
+      <button type="button" id="download" class="primary">Download design YAML</button>
+    </div>
+  </header>
+  <main>
+    <form id="bank-form" autocomplete="off">
+      <section>
+        <h2>Question</h2>
+        <p class="hint">The overview of the question.</p>
+        <div id="question-fields"></div>
+      </section>
+      <section>
+        <h2>Scenario and variations</h2>
+        <p class="hint">Scenarios are the major variation. Common variations apply to each scenario. The default is that all combinations are generated, unless a scenario specification says otherwise.</p>
+        <h3>Common variations</h3>
+        <div id="common-variations"></div>
+        <div class="actions">
+          <button type="button" id="add-common">Add common variation</button>
+        </div>
+        <div id="scenarios"></div>
+        <div class="actions">
+          <button type="button" id="add-scenario">Add scenario</button>
+        </div>
+      </section>
+      <section>
+        <h2>Diagram</h2>
+        <div id="diagram-fields"></div>
+      </section>
+      <section>
+        <h2>Choice items</h2>
+        <p class="hint">Possible answers are each correct for some variation. Distractors are never correct.</p>
+        <div id="possible-answers"></div>
+        <div class="actions">
+          <button type="button" id="add-answer">Add possible answer</button>
+        </div>
+        <div id="distractors"></div>
+        <div class="actions">
+          <button type="button" id="add-distractor">Add distractor</button>
+        </div>
+        <div id="choice-notes"></div>
+      </section>
+      <section>
+        <h2>Creation process</h2>
+        <p class="hint">The item list and the item tally are computed later. Do not enter how many scenes to keep.</p>
+        <div id="process-fields"></div>
+      </section>
+      <section>
+        <div class="row-label">
+          <h2>Preview Design YAML</h2>
+          <button type="button" id="view-yaml">View</button>
+        </div>
+        <pre id="preview">Click View to show the YAML here before you download it.</pre>
+      </section>
+    </form>
+  </main>
+  <dialog id="example-dialog">
+    <h3 id="example-title">Example</h3>
+    <pre id="example-body"></pre>
+    <div class="actions">
+      <button type="button" id="close-example">Close</button>
+    </div>
+  </dialog>
+  <script>
+    const example = {
+      situation: "An object moves in a full circle, either in a vertical loop under gravity or in a horizontal circle with a sideways wind or current.",
+      given: "The problem includes a figure of the path with three labeled positions. The positive direction along the radius is toward the center of the circle. The problem defines every symbol used in the choices.",
+      ask: "Choose the correct form of Newton's second law along the radial direction at one of the three positions.",
+      commonVariations: [
+        "The question asks for different positions on the circle. There are three positions. On a vertical circle they are the top, the side (left or right), and the bottom. On a horizontal circle they are the leftmost point, the point at the top of the top-view figure, and the rightmost point."
+      ],
+      scenarios: [
+        {
+          description: "A small object is swung in a vertical circle on a string or rope. It is subject to gravity and stays on the circular path.",
+          variations: [],
+          specifications: "The constraint is the tension T. The other radial force is the weight mg. Use the vertical position names. No wind or current."
+        },
+        {
+          description: "An object such as a toy car, a real car, or an experimental device moves on a circular track in a vertical loop, fast enough that it does not leave the track. It is subject to gravity.",
+          variations: [],
+          specifications: "The constraint is the normal force N from the track. The other radial force is the weight mg. Use the vertical position names. No wind or current."
+        },
+        {
+          description: "An object such as a model airplane, a model boat, or a model car travels in a horizontal circle, tied to a string or wire, with wind or current from the left or from the right.",
+          variations: ["Direction of the wind or current. Either from the left, or from the right."],
+          specifications: "The constraint is the tension T. The sideways force is the wind or current. Use the horizontal position names."
+        },
+        {
+          description: "An object such as a car or a truck travels on a circular path or road. There is friction between the object and the ground, and wind from the left or from the right.",
+          variations: ["Direction of the wind. Either from the left, or from the right."],
+          specifications: "The constraint is friction with the ground. The sideways force is the wind. Use the horizontal position names."
+        }
+      ],
+      needDiagram: "Yes",
+      diagramSpecification: "One figure for each scene the user keeps. Label the object, and label all three positions on that figure. Show gravity with one arrow, or wind or current with an array of arrows in that direction. For a string or rope, draw the circular path dashed and the rope or cable solid. For a track, road, or friction with the ground, draw the track or road solid and the radius dashed.",
+      possibleAnswers: [
+        "T + mg = m a_c",
+        "T - mg = m a_c",
+        "T = m a_c"
+      ],
+      distractors: [
+        "T + mg + F_c = m a_c",
+        "T - mg + F_c = m a_c",
+        "T + F_c = m a_c"
+      ],
+      distractorNotes: [
+        "Never correct. F_c is already the net inward force and is not added again.",
+        "Never correct. Same extra F_c.",
+        "Never correct. Same extra F_c."
+      ],
+      choiceVariations: "Keep this order in every scenario. Scenario 1 uses T and mg as written. Scenario 2 replaces T with N. Scenario 3 replaces mg with the wind or current force. Scenario 4 replaces T with friction and mg with the wind force.",
+      correctAnswer: "Use possible answer 1 when the other force points toward the center, possible answer 2 when it points away from the center, and possible answer 3 when it has no radial component. On a vertical circle those positions are the top, the bottom, and the side. On a horizontal circle, the point at the top of the figure is always possible answer 3. If the wind or current blows toward the right, the leftmost point is possible answer 1 and the rightmost point is possible answer 2. If it blows toward the left, those two swap.",
+      candidates: 4,
+      samples: 1,
+      minorFixes: "Yes",
+      convertYaml: "Yes",
+      yamlTemplate: ""
+    };
+
+    function blankState() {
+      return {
+        situation: "",
+        given: "",
+        ask: "",
+        commonVariations: [""],
+        scenarios: [{ description: "", variations: [], specifications: "" }],
+        needDiagram: "Yes",
+        diagramSpecification: "",
+        possibleAnswers: ["", ""],
+        distractors: ["", ""],
+        choiceVariations: "",
+        correctAnswer: "",
+        candidates: 4,
+        samples: 1,
+        minorFixes: "Yes",
+        convertYaml: "Yes",
+        yamlTemplate: ""
+      };
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function seeButton(kind, extra) {
+      const attrs = Object.entries(extra || {}).map(([key, value]) => ` data-${key}="${value}"`).join("");
+      return `<button type="button" class="see" data-example="${kind}"${attrs}>see example</button>`;
+    }
+
+    function textBlock(id, label, hint, kind, value, rows) {
+      return `
+        <div class="field">
+          <div class="field-label">
+            <label for="${id}">${label}</label>
+            ${seeButton(kind)}
+          </div>
+          ${hint ? `<p class="hint">${hint}</p>` : ""}
+          <textarea id="${id}" rows="${rows || 3}">${escapeHtml(value || "")}</textarea>
+        </div>`;
+    }
+
+    function numberBlock(id, label, hint, kind, value) {
+      return `
+        <div class="field">
+          <div class="field-label">
+            <label for="${id}">${label}</label>
+            ${seeButton(kind)}
+          </div>
+          ${hint ? `<p class="hint">${hint}</p>` : ""}
+          <input id="${id}" type="number" min="1" step="1" value="${escapeHtml(value)}">
+        </div>`;
+    }
+
+    function selectBlock(id, label, hint, kind, value) {
+      const yes = value === "Yes" ? " selected" : "";
+      const no = value === "No" ? " selected" : "";
+      return `
+        <div class="field">
+          <div class="field-label">
+            <label for="${id}">${label}</label>
+            ${seeButton(kind)}
+          </div>
+          ${hint ? `<p class="hint">${hint}</p>` : ""}
+          <select id="${id}">
+            <option${yes}>Yes</option>
+            <option${no}>No</option>
+          </select>
+        </div>`;
+    }
+
+    function variationRow(label, value, kind, extra) {
+      return `
+        <div class="repeat">
+          <div class="row-label">
+            <label>${label}</label>
+            ${seeButton(kind, extra)}
+            <button type="button" class="remove" data-remove="variation">Remove</button>
+          </div>
+          <textarea data-field="variation" rows="2">${escapeHtml(value || "")}</textarea>
+        </div>`;
+    }
+
+    function renderQuestion(state) {
+      document.getElementById("question-fields").innerHTML = [
+        textBlock("situation", "situation", "The physical situation.", "situation", state.situation),
+        textBlock("given", "given", "The given condition.", "given", state.given),
+        textBlock("ask", "ask", "What the students are expected to choose.", "ask", state.ask)
+      ].join("");
+    }
+
+    function renderCommon(state) {
+      document.getElementById("common-variations").innerHTML = state.commonVariations.map((value, index) =>
+        variationRow(`variation ${index + 1}`, value, "common", { index })
+      ).join("");
+    }
+
+    function renderScenarios(state) {
+      document.getElementById("scenarios").innerHTML = state.scenarios.map((scenario, index) => `
+        <div class="scenario" data-scenario="${index}">
+          <div class="row-label">
+            <h3>scenario ${index + 1}</h3>
+            <button type="button" class="remove" data-remove="scenario">Remove scenario</button>
+          </div>
+          <div class="field">
+            <div class="field-label">
+              <label>description</label>
+              ${seeButton("scenario-description", { index })}
+            </div>
+            <p class="hint">General description of the scenario.</p>
+            <textarea data-field="description" rows="3">${escapeHtml(scenario.description || "")}</textarea>
+          </div>
+          <div class="variation-list">
+            ${scenario.variations.map((value, variationIndex) =>
+              variationRow(`variation ${variationIndex + 1}`, value, "scenario-variation", { index, variation: variationIndex })
+            ).join("")}
+          </div>
+          <div class="actions">
+            <button type="button" data-add="scenario-variation">Add variation</button>
+          </div>
+          <div class="field">
+            <div class="field-label">
+              <label>specifications</label>
+              ${seeButton("scenario-specifications", { index })}
+            </div>
+            <p class="hint">Special instructions for this scenario. For example, a variation combination that does not apply here.</p>
+            <textarea data-field="specifications" rows="3">${escapeHtml(scenario.specifications || "")}</textarea>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderDiagram(state) {
+      document.getElementById("diagram-fields").innerHTML = [
+        selectBlock("need-diagram", "need diagram", "Whether the items need a figure.", "need-diagram", state.needDiagram),
+        textBlock("diagram-specification", "diagram specification", "How the diagram should be created.", "diagram-specification", state.diagramSpecification, 5)
+      ].join("");
+    }
+
+    function choiceRow(label, value, kind, index) {
+      return `
+        <div class="repeat">
+          <div class="row-label">
+            <label>${label}</label>
+            ${seeButton(kind, { index })}
+            <button type="button" class="remove" data-remove="choice">Remove</button>
+          </div>
+          <input data-field="choice" type="text" value="${escapeHtml(value || "")}">
+        </div>`;
+    }
+
+    function renderChoices(state) {
+      document.getElementById("possible-answers").innerHTML = state.possibleAnswers.map((value, index) =>
+        choiceRow(`possible answer ${index + 1}`, value, "possible-answer", index)
+      ).join("");
+      document.getElementById("distractors").innerHTML = state.distractors.map((value, index) =>
+        choiceRow(`distractor ${index + 1}`, value, "distractor", index)
+      ).join("");
+      document.getElementById("choice-notes").innerHTML = [
+        textBlock("choice-variations", "choice variations", "How the choice items vary with the scenario.", "choice-variations", state.choiceVariations, 4),
+        textBlock("correct-answer", "correct answer", "How to determine which possible answer is correct for each variation. If left blank, the creation agent will make its best guess.", "correct-answer", state.correctAnswer, 4)
+      ].join("");
+    }
+
+    function renderProcess(state) {
+      document.getElementById("process-fields").innerHTML = [
+        numberBlock("candidates", "candidates scenes per scenario", "How many candidate scenes to propose for each scenario. You choose how many to keep when you review them.", "candidates", state.candidates),
+        numberBlock("samples", "samples per scenario", "How many sample problems to write for each scenario for you to review and correct.", "samples", state.samples),
+        selectBlock("minor-fixes", "automatic minor fixes", "Correct small wording and label mismatches without asking.", "minor-fixes", state.minorFixes),
+        selectBlock("convert-yaml", "convert markdown to problem bank YAML", "Whether the markdown document should be converted to problem bank YAML at the end of creation.", "convert-yaml", state.convertYaml),
+        textBlock("yaml-template", "Problem bank YAML template", "Leave blank to use the default template.", "yaml-template", state.yamlTemplate, 2)
+      ].join("");
+    }
+
+    function render(state) {
+      renderQuestion(state);
+      renderCommon(state);
+      renderScenarios(state);
+      renderDiagram(state);
+      renderChoices(state);
+      renderProcess(state);
+      document.getElementById("preview").textContent = "Click View to show the YAML here before you download it.";
+    }
+
+    function renumber(container, prefix) {
+      container.querySelectorAll(":scope > .repeat").forEach((row, index) => {
+        row.querySelector("label").textContent = `${prefix} ${index + 1}`;
+        const see = row.querySelector(".see");
+        if (!see) return;
+        if (see.dataset.example === "scenario-variation") see.dataset.variation = String(index);
+        else see.dataset.index = String(index);
+      });
+    }
+
+    function collect() {
+      const scenarios = [...document.querySelectorAll("#scenarios .scenario")].map((card) => ({
+        description: card.querySelector("[data-field='description']").value.trim(),
+        variations: [...card.querySelectorAll("[data-field='variation']")].map((field) => field.value.trim()).filter(Boolean),
+        specifications: card.querySelector("[data-field='specifications']").value.trim()
+      }));
+      return {
+        situation: document.getElementById("situation").value.trim(),
+        given: document.getElementById("given").value.trim(),
+        ask: document.getElementById("ask").value.trim(),
+        commonVariations: [...document.querySelectorAll("#common-variations [data-field='variation']")].map((field) => field.value.trim()).filter(Boolean),
+        scenarios,
+        needDiagram: document.getElementById("need-diagram").value,
+        diagramSpecification: document.getElementById("diagram-specification").value.trim(),
+        possibleAnswers: [...document.querySelectorAll("#possible-answers [data-field='choice']")].map((field) => field.value.trim()).filter(Boolean),
+        distractors: [...document.querySelectorAll("#distractors [data-field='choice']")].map((field) => field.value.trim()).filter(Boolean),
+        choiceVariations: document.getElementById("choice-variations").value.trim(),
+        correctAnswer: document.getElementById("correct-answer").value.trim(),
+        candidates: document.getElementById("candidates").value,
+        samples: document.getElementById("samples").value,
+        minorFixes: document.getElementById("minor-fixes").value,
+        convertYaml: document.getElementById("convert-yaml").value,
+        yamlTemplate: document.getElementById("yaml-template").value.trim()
+      };
+    }
+
+    function yamlScalar(value, indent) {
+      const text = value == null ? "" : String(value);
+      if (text === "") return "";
+      if (text.includes("\n")) {
+        const pad = " ".repeat(indent + 2);
+        return "|\n" + text.split("\n").map((row) => pad + row).join("\n");
+      }
+      if (/[:#]|^\s|\s$|^[\[\]{},&*!|>%@`'"]|^(yes|no|true|false|null|~|-?\d+(\.\d+)?)$/i.test(text)) {
+        return JSON.stringify(text);
+      }
+      return text;
+    }
+
+    function line(indent, key, value) {
+      const scalar = yamlScalar(value, indent);
+      return `${" ".repeat(indent)}- ${key}: ${scalar}`.trimEnd();
+    }
+
+    function keyLine(indent, key, value) {
+      const scalar = yamlScalar(value, indent);
+      return `${" ".repeat(indent)}${key}: ${scalar}`.trimEnd();
+    }
+
+    function toYaml(state) {
+      const lines = [
+        "### Multiple-choice question bank input",
+        "### The item list and the item tally are computed later, after you choose which candidate scenes to keep.",
+        "",
+        "Question:",
+        line(2, "situation", state.situation),
+        line(2, "given", state.given),
+        line(2, "ask", state.ask),
+        "",
+        "scenario and variations:",
+        "  - common variations:"
+      ];
+      state.commonVariations.forEach((value, index) => {
+        lines.push(line(6, `variation ${index + 1}`, value));
+      });
+      state.scenarios.forEach((scenario, index) => {
+        lines.push(`  - scenario ${index + 1}:`);
+        lines.push(line(4, "description", scenario.description));
+        scenario.variations.forEach((value, variationIndex) => {
+          lines.push(line(4, `variation ${variationIndex + 1}`, value));
+        });
+        lines.push(line(4, "specifications", scenario.specifications));
+      });
+      lines.push(
+        "",
+        "Diagram:",
+        `  - need diagram: ${state.needDiagram}`,
+        line(2, "diagram specification", state.diagramSpecification),
+        "",
+        "Choice Items:"
+      );
+      state.possibleAnswers.forEach((value, index) => {
+        lines.push(line(2, `possible answer ${index + 1}`, value));
+      });
+      state.distractors.forEach((value, index) => {
+        lines.push(line(2, `distractor ${index + 1}`, value));
+      });
+      lines.push(
+        line(2, "choice variations", state.choiceVariations),
+        line(2, "correct answer", state.correctAnswer),
+        "",
+        "Creation Process:",
+        `  - candidates scenes per scenario: ${state.candidates || ""}`,
+        `  - samples per scenario: ${state.samples || ""}`,
+        `  - automatic minor fixes: ${state.minorFixes}`,
+        "  - export:",
+        `      convert markdown to problem bank YAML: ${state.convertYaml}`,
+        keyLine(6, "YAML template", state.yamlTemplate)
+      );
+      return lines.join("\n") + "\n";
+    }
+
+    function exampleText(button) {
+      const kind = button.dataset.example;
+      const index = Number(button.dataset.index);
+      const variation = Number(button.dataset.variation);
+      const scenario = example.scenarios[index];
+      if (kind === "situation") return ["situation", example.situation];
+      if (kind === "given") return ["given", example.given];
+      if (kind === "ask") return ["ask", example.ask];
+      if (kind === "common") {
+        const value = example.commonVariations[index];
+        return value
+          ? [`common variation ${index + 1}`, value]
+          : ["common variation", `The circular-motion example has ${example.commonVariations.length} common variation:\n\n${example.commonVariations[0]}`];
+      }
+      if (kind === "scenario-description") {
+        return scenario
+          ? [`scenario ${index + 1} description`, scenario.description]
+          : ["scenario description", `The circular-motion example has ${example.scenarios.length} scenarios. There is no scenario ${index + 1}.`];
+      }
+      if (kind === "scenario-specifications") {
+        return scenario
+          ? [`scenario ${index + 1} specifications`, scenario.specifications]
+          : ["specifications", `The circular-motion example has ${example.scenarios.length} scenarios. There is no scenario ${index + 1}.`];
+      }
+      if (kind === "scenario-variation") {
+        if (!scenario) return ["variation", `The circular-motion example has ${example.scenarios.length} scenarios. There is no scenario ${index + 1}.`];
+        const value = scenario.variations[variation];
+        if (value) return [`scenario ${index + 1} variation ${variation + 1}`, value];
+        if (scenario.variations.length === 0) return [`scenario ${index + 1} variation`, "This scenario in the circular-motion example has no scenario-specific variation."];
+        return [`scenario ${index + 1} variation`, `This scenario has ${scenario.variations.length} variation:\n\n${scenario.variations[0]}`];
+      }
+      if (kind === "need-diagram") return ["need diagram", example.needDiagram];
+      if (kind === "diagram-specification") return ["diagram specification", example.diagramSpecification];
+      if (kind === "possible-answer") {
+        const value = example.possibleAnswers[index];
+        return value
+          ? [`possible answer ${index + 1}`, value]
+          : ["possible answer", `The circular-motion example has ${example.possibleAnswers.length} possible answers.`];
+      }
+      if (kind === "distractor") {
+        const value = example.distractors[index];
+        if (!value) return ["distractor", `The circular-motion example has ${example.distractors.length} distractors.`];
+        return [`distractor ${index + 1}`, `${value}\n\nNote in the example file: ${example.distractorNotes[index]}`];
+      }
+      if (kind === "choice-variations") return ["choice variations", example.choiceVariations];
+      if (kind === "correct-answer") return ["correct answer", example.correctAnswer];
+      if (kind === "candidates") return ["candidates scenes per scenario", String(example.candidates)];
+      if (kind === "samples") return ["samples per scenario", String(example.samples)];
+      if (kind === "minor-fixes") return ["automatic minor fixes", example.minorFixes];
+      if (kind === "convert-yaml") return ["convert markdown to YAML", example.convertYaml];
+      if (kind === "yaml-template") return ["YAML template", "Left blank. The default template is used."];
+      return ["Example", "This field has no circular-motion example."];
+    }
+
+    function showExample(button) {
+      const [title, body] = exampleText(button);
+      document.getElementById("example-title").textContent = title;
+      document.getElementById("example-body").textContent = body;
+      document.getElementById("example-dialog").showModal();
+    }
+
+    document.getElementById("bank-form").addEventListener("click", (event) => {
+      const see = event.target.closest(".see");
+      if (see) {
+        showExample(see);
+        return;
+      }
+      const remove = event.target.closest("[data-remove]");
+      if (remove) {
+        const kind = remove.dataset.remove;
+        if (kind === "scenario") {
+          const cards = document.querySelectorAll("#scenarios .scenario");
+          if (cards.length === 1) return;
+          remove.closest(".scenario").remove();
+          document.querySelectorAll("#scenarios .scenario").forEach((card, index) => {
+            card.dataset.scenario = String(index);
+            card.querySelector("h3").textContent = `scenario ${index + 1}`;
+            card.querySelectorAll(".see").forEach((button) => {
+              if ("index" in button.dataset) button.dataset.index = String(index);
+            });
+          });
+          return;
+        }
+        const row = remove.closest(".repeat");
+        const list = row.parentElement;
+        const rows = list.querySelectorAll(":scope > .repeat");
+        if ((kind === "choice" || list.id === "common-variations") && rows.length === 1) return;
+        row.remove();
+        const prefix = list.id === "possible-answers" ? "possible answer" : list.id === "distractors" ? "distractor" : "variation";
+        renumber(list, prefix);
+        return;
+      }
+      const add = event.target.closest("[data-add='scenario-variation']");
+      if (add) {
+        const card = add.closest(".scenario");
+        const list = card.querySelector(".variation-list");
+        const index = Number(card.dataset.scenario);
+        const variation = list.querySelectorAll(".repeat").length;
+        list.insertAdjacentHTML("beforeend", variationRow(`variation ${variation + 1}`, "", "scenario-variation", { index, variation }));
+      }
+    });
+
+    document.getElementById("add-common").addEventListener("click", () => {
+      const list = document.getElementById("common-variations");
+      const index = list.querySelectorAll(".repeat").length;
+      list.insertAdjacentHTML("beforeend", variationRow(`variation ${index + 1}`, "", "common", { index }));
+    });
+
+    document.getElementById("add-scenario").addEventListener("click", () => {
+      const scenarios = [...document.querySelectorAll("#scenarios .scenario")].map((card) => ({
+        description: card.querySelector("[data-field='description']").value,
+        variations: [...card.querySelectorAll("[data-field='variation']")].map((field) => field.value),
+        specifications: card.querySelector("[data-field='specifications']").value
+      }));
+      scenarios.push({ description: "", variations: [], specifications: "" });
+      renderScenarios({ scenarios });
+    });
+
+    document.getElementById("add-answer").addEventListener("click", () => {
+      const list = document.getElementById("possible-answers");
+      const index = list.querySelectorAll(".repeat").length;
+      list.insertAdjacentHTML("beforeend", choiceRow(`possible answer ${index + 1}`, "", "possible-answer", index));
+    });
+
+    document.getElementById("add-distractor").addEventListener("click", () => {
+      const list = document.getElementById("distractors");
+      const index = list.querySelectorAll(".repeat").length;
+      list.insertAdjacentHTML("beforeend", choiceRow(`distractor ${index + 1}`, "", "distractor", index));
+    });
+
+    document.getElementById("load-example").addEventListener("click", () => {
+      const dirty = document.getElementById("situation").value.trim() || document.getElementById("ask").value.trim();
+      if (dirty && !window.confirm("Replace the current form with the circular-motion example?")) return;
+      render(structuredClone(example));
+    });
+
+    document.getElementById("clear-all").addEventListener("click", () => {
+      if (!window.confirm("Clear every field and start over?")) return;
+      render(blankState());
+    });
+
+    function showPreview() {
+      const yaml = toYaml(collect());
+      document.getElementById("preview").textContent = yaml;
+      return yaml;
+    }
+
+    document.getElementById("view-yaml").addEventListener("click", () => {
+      showPreview();
+    });
+
+    document.getElementById("download").addEventListener("click", () => {
+      const yaml = showPreview();
+      const blob = new Blob([yaml], { type: "application/yaml" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "multiple-choice-input.yaml";
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("close-example").addEventListener("click", () => {
+      document.getElementById("example-dialog").close();
+    });
+
+    document.getElementById("bank-form").addEventListener("submit", (event) => event.preventDefault());
+
+    render(blankState());
+  </script>
+</body>
+</html>

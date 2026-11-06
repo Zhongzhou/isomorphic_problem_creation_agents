@@ -1,0 +1,48 @@
+### Sample input filled from PHY I Mechanics/4_Newton's Laws of Motion/PHY1-N2-RNSLCM-10122026/Creation Plan.md
+### The item list and the item tally are not filled in. Later agents compute them after you choose which candidate scenes to keep.
+
+
+Question: # The overview of the question
+  - situation: An object moves in a full circle, either in a vertical loop under gravity or in a horizontal circle with a sideways wind or current.
+  - given: The problem includes a figure of the path with three labeled positions. The positive direction along the radius is toward the center of the circle. The problem defines every symbol used in the choices.
+  - ask: Choose the correct form of Newton's second law along the radial direction at one of the three positions.
+
+scenario and variations: # Scenarios are the major variation. Each scenario can have its own variations. Common variations combine with scenario variations unless a specification says otherwise.
+  - common variations:
+      - variation 1: The question asks for different positions on the circle. There are three positions. On a vertical circle they are the top, the side (left or right), and the bottom. On a horizontal circle they are the leftmost point, the point at the top of the top-view figure, and the rightmost point.
+  - scenario 1:
+    - description: A small object is swung in a vertical circle on a string or rope. It is subject to gravity and stays on the circular path.
+    - specifications: The constraint is the tension T. The other radial force is the weight mg. Use the vertical position names. No wind or current.
+  - scenario 2:
+    - description: An object such as a toy car, a real car, or an experimental device moves on a circular track in a vertical loop, fast enough that it does not leave the track. It is subject to gravity.
+    - specifications: The constraint is the normal force N from the track. The other radial force is the weight mg. Use the vertical position names. No wind or current.
+  - scenario 3:
+    - description: An object such as a model airplane, a model boat, or a model car travels in a horizontal circle, tied to a string or wire, with wind or current from the left or from the right.
+    - variation 1: Direction of the wind or current. Either from the left, or from the right.
+    - specifications: The constraint is the tension T. The sideways force is the wind or current. Use the horizontal position names.
+  - scenario 4:
+    - description: An object such as a car or a truck travels on a circular path or road. There is friction between the object and the ground, and wind from the left or from the right.
+    - variation 1: Direction of the wind. Either from the left, or from the right.
+    - specifications: The constraint is friction with the ground. The sideways force is the wind. Use the horizontal position names.
+
+Diagram:
+  - need diagram: Yes
+  - diagram specification: One figure for each scene the user keeps. Label the object, and label all three positions on that figure. Show gravity with one arrow, or wind or current with an array of arrows in that direction. For a string or rope, draw the circular path dashed and the rope or cable solid. For a track, road, or friction with the ground, draw the track or road solid and the radius dashed.
+
+Choice Items: # a_c is the centripetal acceleration. F_c in the distractors is the centripetal force.
+  - possible answer 1: T + mg = m a_c
+  - possible answer 2: T - mg = m a_c
+  - possible answer 3: T = m a_c
+  - distractor 1: T + mg + F_c = m a_c # Never correct. F_c is already the net inward force and is not added again.
+  - distractor 2: T - mg + F_c = m a_c # Never correct. Same extra F_c.
+  - distractor 3: T + F_c = m a_c # Never correct. Same extra F_c.
+  - choice variations: Keep this order in every scenario. Scenario 1 uses T and mg as written. Scenario 2 replaces T with N. Scenario 3 replaces mg with the wind or current force. Scenario 4 replaces T with friction and mg with the wind force.
+  - correct answer: Use possible answer 1 when the other force points toward the center, possible answer 2 when it points away from the center, and possible answer 3 when it has no radial component. On a vertical circle those positions are the top, the bottom, and the side. On a horizontal circle, the point at the top of the figure is always possible answer 3. If the wind or current blows toward the right, the leftmost point is possible answer 1 and the rightmost point is possible answer 2. If it blows toward the left, those two swap.
+
+Creation Process:
+  - candidates scenes per scenario: 4 # Propose this many scenes. The user decides how many to keep when reviewing them.
+  - samples per scenario: 1 # One problem for each of the four scenarios, before the other positions and wind directions are written.
+  - automatic minor fixes: Yes
+  - export:
+      convert markdown to YAML: Yes
+      YAML template: # Creation Plan.md does not name a template. Leave blank to use the default.

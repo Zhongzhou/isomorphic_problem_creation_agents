@@ -1,0 +1,830 @@
+bank_info:
+    title: Identification of free body diagram forces
+    bank_id: PHY1-F-IFBDF-09-17-2025
+    description: |-
+     Multiple-answer question, Identification of free body diagram forces
+    date created: 09-17-2025
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field.
+    learning objectives: #to be added later
+    generational prompts:
+        - prompt 1: |
+            I would like to create a physics problem about Identification of free body diagram forces for my class. The problem consists of the following parts:
+                1. A situation involving an inanamate object acted on by exactly three non negligable external forces, A boat is floating at rest on a lake, a block sliding down a rough incline plane, an hockey puck gliding on ice.
+                2. Three corect answers:
+                a. An external force such as friction bouyancy normal force, aplied force, tention force
+                b. A second external force such as friction bouyancy normal force, aplied force, tention force
+                a. Each answer should describe an external force (including gravity) acting on the object
+                3. Two distractors
+                a. Distractor 1: Force by the object on the external
+                b. Distractor 2: The force of the object moving
+                Here is an example:
+
+                Situation: A wooden crate is sliding down a snowey hill at a constant velocity.
+
+                Correct 1: Normal force by the ground on the crate
+                Correct 2: The force of gravity on the crate
+                Correct 3: The force of kentic friction on the crate
+                Distractor 1: The force of the crate's motion up the hill
+                Distractor 2: The force of the crate on the ground
+
+                first, create 5 different versions according to this example format no emoji.
+        - prompt 1.1:  |
+                Great, write another 10 different versions please.
+        - prompt 1.2:  | 
+                Great, write another 10 different versions please.
+        - prompt 1.3:  |
+                Great, now generate another batch of 10 such problem descriptions
+        - prompt 2:   |
+                I have 25 versions of the description of physics problems in this file. I would like to write them into the yaml format, as shown in the example in the YAML_formating_prompt. Here are the requirements:
+                1. Each problem body should explain the problem situation, then ask “Which of the following are valid forces acting on the object in its free-body diagram? Select all that apply.”.
+                2. The solution to each problem should be short and mostly the same across multiple problems, stating that free body diagrams only include real external forces acting on the object not forces by the object acting on external objects also motion forces are not real
+                As a first step, generate the yaml code for the first problem as a test
+    updates: 
+        - update 1: 
+            - description: Checked for unreasonable scenarios, added force type to distractor, changed question text, and removed choice lock.
+            - prompt 1: |
+                I have this yaml file that contains 25 problems. I would like you to check and update three things about each question:
+                1. check if the problem context involves an object in motion. For example, "a boat is floating at rest on a lake" is not moving, so it should be changed to " a boat floating at constant velocity on a lake".
+                2. Change the wording of the question into "Which of the following forces should be included in the free-body diagram of the [object]?", where [object] should be replaced by the object in the problem body.
+                3. One of the choice item is in the form of "The force of the [object] on the [external]". For this item, add the nature of the force, such as "normal force" or "pressure force".
+                Please re-generate the yaml for the problems, starting with problems 1-5.
+            - prompt 2: |
+                For q1, change the two options involving anchor to something else because there is no anchor involved in the problem.
+            - prompt 3: |
+                One more thing, remove all the "lock" features. Regenerate yaml for question 1 - 5 please
+            - prompt 4: |
+                Now update the yaml for problems 6 - 15:
+                1. check if context involves motion
+                2. Update question text
+                3. Add force type of one of the choice items
+                4. Check if choice items contain additional objects not mentioned in the problem text (if yes, re-write choice item)
+                5. remove the "lock" field.
+
+                Also create a summary of which items have been re-written and why
+            # the rest of the problems are also corrected by simply prompting the AI.
+    associated data:
+    generation details: # Details of the creation process
+            model: Gemini-Pro # The model used to generate the questions
+            version: 2.5 # The version of the model used
+            last updated: 09-18-2025 # The date of the last update of the generation prompts.
+    authors:
+        - Owen Raymond
+        - Zhongzhou Chen
+
+
+questions:
+- multiple_answers:
+    id: q-1
+    title: "Free-Body Diagram: Floating Boat"
+    points: 2
+    partial: false
+    text: |
+      A boat is floating at a constant velocity on a lake.
+
+      Which of the following forces should be included in the free-body diagram of the boat?
+    answers:
+    - answer:
+        text: "The force of gravity on the boat."
+        correct: true
+    - answer:
+        text: "The buoyant force exerted by the water on the boat."
+        correct: true
+    - answer:
+        text: "The force of drag from the water on the boat."
+        correct: true
+    - answer:
+        text: "The downward pressure force exerted by the boat on the water."
+        correct: false
+    - answer:
+        text: "The force of the boat's motion."
+        correct: false
+    feedback:
+      general: |
+        A free-body diagram includes only real, external forces acting on the object 
+        (e.g., weight, normal, friction, tension, buoyancy). Forces the object exerts 
+        on its surroundings and “motion/inertia” are not forces on the object.
+      on_correct: Correct!
+      on_incorrect: Not quite, try again!
+
+- multiple_answers:
+    id: q-2
+    title: "Free-Body Diagram: Gliding Hockey Puck"
+    points: 2
+    partial: false
+    text: |
+      A hockey puck is gliding across a sheet of ice after being struck. 
+      
+      Which of the following forces should be included in the free-body diagram of the puck?
+    answers:
+    - answer:
+        text: The force of gravity on the puck.
+        correct: true
+    - answer:
+        text: The normal force exerted by the ice on the puck.
+        correct: true
+    - answer:
+        text: The force of kinetic friction on the puck.
+        correct: true
+    - answer:
+        text: The normal force exerted by the puck on the ice.
+        correct: false
+    - answer:
+        text: The force of the puck's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-3
+    title: "Free-Body Diagram: Sliding Block"
+    points: 2
+    partial: false
+    text: |
+      A block is sliding down a rough inclined plane. 
+      
+      Which of the following forces should be included in the free-body diagram of the block?
+    answers:
+    - answer:
+        text: The force of gravity on the block.
+        correct: true
+    - answer:
+        text: The normal force exerted by the incline on the block.
+        correct: true
+    - answer:
+        text: The force of kinetic friction on the block.
+        correct: true
+    - answer:
+        text: The normal force exerted by the block on the incline.
+        correct: false
+    - answer:
+        text: The force of the block's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-4
+    title: "Free-Body Diagram: Accelerating Hot Air Balloon"
+    points: 2
+    partial: false
+    text: |
+      A hot air balloon is accelerating upwards. 
+      
+      Which of the following forces should be included in the free-body diagram of the balloon?
+    answers:
+    - answer:
+        text: The force of gravity on the balloon.
+        correct: true
+    - answer:
+        text: The buoyant force exerted by the air on the balloon.
+        correct: true
+    - answer:
+        text: The thrust force from the burner on the balloon.
+        correct: true
+    - answer:
+        text: The force of the balloon's motion.
+        correct: false
+    - answer:
+        text: The downward force exerted by the balloon on the surrounding air.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-5
+    title: "Free-Body Diagram: Book on a Table"
+    points: 2
+    partial: false
+    text: |
+      A book is sliding at a constant velocity on a table, with a hand pressing down on it.
+      
+      Which of the following forces should be included in the free-body diagram of the book?
+    answers:
+    - answer:
+        text: The force of gravity on the book.
+        correct: true
+    - answer:
+        text: The normal force exerted by the table on the book.
+        correct: true
+    - answer:
+        text: The downward force from the hand on the book.
+        correct: true
+    - answer:
+        text: The force of the book's motion.
+        correct: false
+    - answer:
+        text: The normal force exerted by the book on the table.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+
+- multiple_answers:
+    id: q-6
+    title: "Free-Body Diagram: Pushed Box"
+    points: 2
+    partial: false
+    text: |
+      A box is being pushed horizontally across a rough floor at a constant velocity. 
+      
+      Which of the following forces should be included in the free-body diagram of the box?
+    answers:
+    - answer:
+        text: The force of gravity on the box.
+        correct: true
+    - answer:
+        text: The normal force by the floor on the box.
+        correct: true
+    - answer:
+        text: The force of kinetic friction on the box.
+        correct: true
+    - answer:
+        text: The normal force exerted by the box on the floor.
+        correct: false
+    - answer:
+        text: The force of the box's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-7
+    title: "Free-Body Diagram: Car Accelerating Uphill"
+    points: 2
+    partial: false
+    text: |
+      A car is accelerating up a hill. 
+      
+      Which of the following forces should be included in the free-body diagram of the car?
+    answers:
+    - answer:
+        text: The force of gravity on the car.
+        correct: true
+    - answer:
+        text: The normal force by the road on the car.
+        correct: true
+    - answer:
+        text: The force of friction from the tires on the car.
+        correct: true
+    - answer:
+        text: The force of the car's motion.
+        correct: false
+    - answer:
+        text: The normal force exerted by the car on the road.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-8
+    title: "Free-Body Diagram: Falling Apple"
+    points: 2
+    partial: false
+    text: |
+      An apple is falling from a tree with air resistance. 
+      
+      Which of the following forces should be included in the free-body diagram of the apple?
+    answers:
+    - answer:
+        text: The force of gravity on the apple.
+        correct: true
+    - answer:
+        text: The force of air resistance (drag) on the apple.
+        correct: true
+    - answer:
+        text: The force of the wind on the apple.
+        correct: true
+    - answer:
+        text: The force of the apple's motion.
+        correct: false
+    - answer:
+        text: The drag force exerted by the apple on the air.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-9
+    title: "Free-Body Diagram: Pulled Sled"
+    points: 2
+    partial: false
+    text: |
+      A sled is being pulled at a constant velocity across a flat, snowy field. 
+      
+      Which of the following forces should be included in the free-body diagram of the sled?
+    answers:
+    - answer:
+        text: The force of gravity on the sled.
+        correct: true
+    - answer:
+        text: The normal force by the snow on the sled.
+        correct: true
+    - answer:
+        text: The tension force from the rope on the sled.
+        correct: true
+    - answer:
+        text: The force of the sled's motion.
+        correct: false
+    - answer:
+        text: The normal force exerted by the sled on the snow.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-10
+    title: "Free-Body Diagram: Orbiting Satellite"
+    points: 2
+    partial: false
+    text: |
+      A satellite in low-earth orbit is using its thrusters to maintain its altitude against atmospheric drag.
+      
+      Which of the following forces should be included in the free-body diagram of the satellite?
+    answers:
+    - answer:
+        text: The force of gravity on the satellite.
+        correct: true
+    - answer:
+        text: The force of atmospheric drag on the satellite.
+        correct: true
+    - answer:
+        text: The thrust force from the engine on the satellite.
+        correct: true
+    - answer:
+        text: The gravitational force exerted by the satellite on the Earth.
+        correct: false
+    - answer:
+        text: The force of the satellite's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-11
+    title: "Free-Body Diagram: Swaying Chandelier"
+    points: 2
+    partial: false
+    text: |
+      A chandelier is hanging from the ceiling, slightly swaying back and forth. 
+      
+      Which of the following forces should be included in the free-body diagram of the chandelier?
+    answers:
+    - answer:
+        text: The force of gravity on the chandelier.
+        correct: true
+    - answer:
+        text: The force of tension from the chain on the chandelier.
+        correct: true
+    - answer:
+        text: The force of air resistance on the chandelier.
+        correct: true
+    - answer:
+        text: The force of the chandelier's motion.
+        correct: false
+    - answer:
+        text: The tension force exerted by the chandelier on the ceiling.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-12
+    title: "Free-Body Diagram: Pulled Block"
+    points: 2
+    partial: false
+    text: |
+      A block is being pulled across a flat, frictionless surface by a rope. 
+      
+      Which of the following forces should be included in the free-body diagram of the block?
+    answers:
+    - answer:
+        text: The force of gravity on the block.
+        correct: true
+    - answer:
+        text: The normal force exerted by the surface on the block.
+        correct: true
+    - answer:
+        text: The tension force from the rope on the block.
+        correct: true
+    - answer:
+        text: The tension force exerted by the block on the rope.
+        correct: false
+    - answer:
+        text: The force of the block's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-13
+    title: "Free-Body Diagram: Pushed Log"
+    points: 2
+    partial: false
+    text: |
+      A log is being pushed forward. 
+      
+      Which of the following forces should be included in the free-body diagram of the log?
+    answers:
+    - answer:
+        text: The force of gravity on the log.
+        correct: true
+    - answer:
+        text: The applied force pushing the log.
+        correct: true
+    - answer:
+        text: The normal force from the ground on the log.
+        correct: true
+    - answer:
+        text: The force of the log's motion.
+        correct: false
+    - answer:
+        text: The normal force exerted by the log on the ground.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-14
+    title: "Free-Body Diagram: Braking Car"
+    points: 2
+    partial: false
+    text: |
+      A car is braking to a stop on a flat, dry road. 
+      
+      Which of the following forces should be included in the free-body diagram of the car?
+    answers:
+    - answer:
+        text: The force of gravity on the car.
+        correct: true
+    - answer:
+        text: The normal force by the road on the car.
+        correct: true
+    - answer:
+        text: The force of kinetic friction on the car.
+        correct: true
+    - answer:
+        text: The normal force exerted by the car on the road.
+        correct: false
+    - answer:
+        text: The force of the car's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-15
+    title: "Free-Body Diagram: Rising Helium Balloon"
+    points: 2
+    partial: false
+    text: |
+      A helium balloon is rising at a constant velocity. 
+      
+      Which of the following forces should be included in the free-body diagram of the balloon?
+    answers:
+    - answer:
+        text: The force of gravity on the balloon.
+        correct: true
+    - answer:
+        text: The buoyant force from the air on the balloon.
+        correct: true
+    - answer:
+        text: The force of air resistance on the balloon.
+        correct: true
+    - answer:
+        text: The force of the balloon's motion.
+        correct: false
+    - answer:
+        text: The downward pressure force exerted by the balloon on the air.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+
+- multiple_answers:
+    id: q-16
+    title: "Free-Body Diagram: Lowered Piano"
+    points: 2
+    partial: false
+    text: |
+      A piano is being lowered by two ropes at a constant velocity from a second-story window. 
+      
+      Which of the following forces should be included in the free-body diagram of the piano?
+    answers:
+    - answer:
+        text: The force of gravity on the piano.
+        correct: true
+    - answer:
+        text: The tension force from the first rope on the piano.
+        correct: true
+    - answer:
+        text: The tension force from the second rope on the piano.
+        correct: true
+    - answer:
+        text: The tension force exerted by the piano on the ropes.
+        correct: false
+    - answer:
+        text: The force of the piano's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-17
+    title: "Free-Body Diagram: Stacked Blocks"
+    points: 2
+    partial: false
+    text: |
+      A block is sliding at a constant velocity on a table, with another block resting on top of it.
+      
+      Which of the following forces should be included in the free-body diagram of the bottom block?
+    answers:
+    - answer:
+        text: The force of gravity on the bottom block.
+        correct: true
+    - answer:
+        text: The normal force from the table on the bottom block.
+        correct: true
+    - answer:
+        text: The normal force from the top block on the bottom block.
+        correct: true
+    - answer:
+        text: The normal force exerted by the bottom block on the table.
+        correct: false
+    - answer:
+        text: The force of the top block's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-18
+    title: "Free-Body Diagram: Car on Incline"
+    points: 2
+    partial: false
+    text: |
+      A car is sliding down a steep incline at a constant velocity with its brakes applied.
+      
+      Which of the following forces should be included in the free-body diagram of the car?
+    answers:
+    - answer:
+        text: The force of gravity on the car.
+        correct: true
+    - answer:
+        text: The normal force by the road on the car.
+        correct: true
+    - answer:
+        text: The force of kinetic friction by the road on the car.
+        correct: true
+    - answer:
+        text: The normal force exerted by the car on the road.
+        correct: false
+    - answer:
+        text: The force of the car's engine.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-19
+    title: "Free-Body Diagram: Pulled Fish"
+    points: 2
+    partial: false
+    text: |
+      A fishing line is pulling a fish out of the water at a constant velocity. 
+      
+      Which of the following forces should be included in the free-body diagram of the fish?
+    answers:
+    - answer:
+        text: The force of tension from the fishing line on the fish.
+        correct: true
+    - answer:
+        text: The force of gravity on the fish.
+        correct: true
+    - answer:
+        text: The force of drag from the water on the fish.
+        correct: true
+    - answer:
+        text: The drag force exerted by the fish on the water.
+        correct: false
+    - answer:
+        text: The force of the fish's motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-20
+    title: "Free-Body Diagram: Pushed Toy Boat"
+    points: 2
+    partial: false
+    text: |
+      A toy boat is pushed horizontally across a bathtub filled with water at a constant velocity. 
+      
+      Which of the following forces should be included in the free-body diagram of the toy boat?
+    answers:
+    - answer:
+        text: The applied force of the person on the toy boat.
+        correct: true
+    - answer:
+        text: The force of buoyancy on the toy boat.
+        correct: true
+    - answer:
+        text: The force of drag from the water on the toy boat.
+        correct: true
+    - answer:
+        text: The force of the boat moving.
+        correct: false
+    - answer:
+        text: The force exerted by the boat on the water.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-21
+    title: "Free-Body Diagram: Crate on a Ramp"
+    points: 2
+    partial: false
+    text: |
+      A person is pulling a crate up a rough ramp at a constant speed. 
+      
+      Which of the following forces should be included in the free-body diagram of the crate?
+    answers:
+    - answer:
+        text: The force of tension from the rope on the crate.
+        correct: true
+    - answer:
+        text: The force of kinetic friction on the crate.
+        correct: true
+    - answer:
+        text: The force of gravity on the crate.
+        correct: true
+    - answer:
+        text: The pulling force exerted by the crate on the person.
+        correct: false
+    - answer:
+        text: The force of the crate's motion up the ramp.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-22
+    title: "Free-Body Diagram: Falling Apple Revisited"
+    points: 2
+    partial: false
+    text: |
+      An apple is falling from a tree but has not yet reached the ground. 
+      
+      Which of the following forces should be included in the free-body diagram of the apple?
+    answers:
+    - answer:
+        text: The force of gravity on the apple.
+        correct: true
+    - answer:
+        text: The force of air resistance on the apple.
+        correct: true
+    - answer:
+        text: The buoyant force from the air on the apple.
+        correct: true
+    - answer:
+        text: The force of the apple's motion downwards.
+        correct: false
+    - answer:
+        text: The drag force exerted by the apple on the air.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-23
+    title: "Free-Body Diagram: Simple Pendulum"
+    points: 2
+    partial: false
+    text: |
+      A simple pendulum is at its lowest point, momentarily moving fastest. 
+      
+      Which of the following forces should be included in the free-body diagram of the pendulum bob?
+    answers:
+    - answer:
+        text: The force of gravity on the pendulum bob.
+        correct: true
+    - answer:
+        text: The force of tension from the string on the pendulum bob.
+        correct: true
+    - answer:
+        text: The force of air resistance on the pendulum bob.
+        correct: true
+    - answer:
+        text: The force of the pendulum's swing.
+        correct: false
+    - answer:
+        text: The tension force exerted by the pendulum bob on the pivot point.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-24
+    title: "Free-Body Diagram: Hanging Sign"
+    points: 2
+    partial: false
+    text: |
+      A heavy sign is being lifted by two ropes of different lengths at a constant velocity.
+      
+      Which of the following forces should be included in the free-body diagram of the sign?
+    answers:
+    - answer:
+        text: The force of gravity on the sign.
+        correct: true
+    - answer:
+        text: The force of tension from rope 1 on the sign.
+        correct: true
+    - answer:
+        text: The force of tension from rope 2 on the sign.
+        correct: true
+    - answer:
+        text: The tension force exerted by the sign on the ropes.
+        correct: false
+    - answer:
+        text: The force of the sign's upward motion.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!
+- multiple_answers:
+    id: q-25
+    title: "Free-Body Diagram: Rolling Bowling Ball"
+    points: 2
+    partial: false
+    text: |
+      A bowling ball is rolling down a lane, slowing down due to friction. 
+      
+      Which of the following forces should be included in the free-body diagram of the ball?
+    answers:
+    - answer:
+        text: The force of gravity on the ball.
+        correct: true
+    - answer:
+        text: The normal force from the lane on the ball.
+        correct: true
+    - answer:
+        text: The force of kinetic friction on the ball.
+        correct: true
+    - answer:
+        text: The force of the ball's motion.
+        correct: false
+    - answer:
+        text: The normal force exerted by the ball on the lane.
+        correct: false
+    feedback:
+        general: |
+            A free-body diagram only includes real, external forces that act *on* the object. It does not include forces exerted *by* the object on its surroundings or conceptual forces like "force of motion."
+        on_correct: Correct!
+        on_incorrect: Not quite, try again!

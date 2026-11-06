@@ -1,0 +1,19 @@
+id: numerical-calculation
+title: Numerical calculation problems
+summary: Turns an equation scheme into reviewed scenarios and one calculation for every scenario and equation set.
+problem_type: numerical
+version: 0.1.0
+status: draft   # draft | active | deprecated
+authors:
+  - name: Zhongzhou Chen
+    role: author
+    url: https://github.com/Zhongzhou
+license: CC-BY-NC-4.0
+forms:
+  - id: cursor
+    title: Cursor skill
+    version: 0.1.0
+    install_name: problem-creation
+samples:
+  - title: Example input scheme
+    path: examples/input-scheme.yaml

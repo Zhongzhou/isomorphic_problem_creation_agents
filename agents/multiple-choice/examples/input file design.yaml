@@ -1,0 +1,42 @@
+### This is the input form for creating a multiple choice question bank.
+### The choice items contain several potential correct answers (depending on the situation), and several distractors (never correct)
+### Each potential correct answer is the correct answer in one type of variation, and the distractors are never used as correct answers.
+
+
+Question: #The overview of the question
+  - situation: #The physical situation
+  - given: # The given condition
+  - ask: # What the students are expected to choose
+
+scenario and variations: #scenarios are the major variation of the problem. Each scenario can have its own unique variations
+  - common variations: #variations that can apply to each scenario. The default is that all the possible combinations of each variation are generated.
+      - variation 1: 
+      - variation 2: 
+  - scenario 1:
+    - description: # General description of the scenario. Add more scenarios as needed
+    - variation 1: #scenario specific variations.
+    - specifications: # special instructions applied to this scenario. For example, is a particular variation combination does not apply here.
+  - scenario 2:
+    - description:   
+    - variation 1: 
+
+Diagram: 
+  - need diagram: Yes
+  - diagram specification: #how should the diagram be created
+
+
+Choice Items: # Add more choice items as you see fit
+  - possible answer 1: 
+  - possible answer 2:
+  - distractor 1:
+  - distractor 2: 
+  - choice variations: #Specify how the choice items vary with the scenario. 
+  - correct answer: #Describe how to determine which possible answer to use as correct answer in each isomorphic variation. If left blank, the creation agent will make the best guess.
+
+Creation Process: # Instructions for how the bank is built. The item list and the item tally are computed by later agents from the scenarios, variations, and choices. Do not fill those in here.
+  - candidates scenes per scenario: 4 # How many candidate scenes to propose for each scenario for the user to choose from. 
+  - samples per scenario: 1 # How many sample problems to write for each scenario for the user to review and correct.
+  - automatic minor fixes: Yes # Correct small wording and label mismatches without asking
+  - export:
+      convert markdown to YAML: # The bank YAML is the last step
+      YAML template: # Will use default template if no template is provided.

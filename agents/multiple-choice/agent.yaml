@@ -1,0 +1,25 @@
+id: multiple-choice
+title: Conceptual multiple-choice questions
+summary: Turns one physical situation into a bank of isomorphic multiple-choice questions in which the student chooses the correct equation.
+problem_type: multiple_choice
+version: 0.1.0
+status: active   # draft | active | deprecated
+authors:
+  - name: Zhongzhou Chen
+    role: author
+    url: https://github.com/Zhongzhou
+license: CC-BY-NC-4.0
+forms:
+  - id: cursor
+    title: Cursor skill
+    version: 0.1.0
+    install_name: multiple-choice-questions
+samples:
+  - title: Input template
+    path: examples/input file design.yaml
+  - title: Filled example input (circular motion)
+    path: examples/circular-motion-sample-input.yaml
+  - title: Input form (open in a browser to fill in an input file)
+    path: examples/input-form.html
+  - title: "Example bank: radial Newton's second law in circular motion"
+    path: "PHY I Mechanics/4_Newton's Laws of Motion/PHY1-N2-RNSLCM-10122026"

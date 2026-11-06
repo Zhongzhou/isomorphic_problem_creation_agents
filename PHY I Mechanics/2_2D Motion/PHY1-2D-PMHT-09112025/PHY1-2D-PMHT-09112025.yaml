@@ -1,0 +1,708 @@
+bank_info:
+    title: Projectile motion involving half the trajectory
+    bank_id: PHY1-2D-PMHT-09112025 #Subject-Unit-Abbreviation_of_title_or_any_string-date
+    description: |-
+        This problem bank consists of projectile motion calculation problems involving a projectile that either started from a height with horizontal velocity, or launched to a target at the peak of the trajectory.
+    date created: 09-11-2025 # Today's date 
+    status: ready # Only use 'draft', 'ready', 'deployed', and 'deprecated' for this field.
+    learning objectives: # to be added later
+        - 1DM-PD-1
+        - 1DM-VS-1
+    generation prompts: # The following are the prompts that generated the questions in the problem bank.
+        - prompt 1: |
+            I want to write a bank of physics problems for introductory level physics students involving projectil motion. Those problems involve projectiles either thrown horizontally from a given height and land below, or launched from the ground at an angle, and reaches a target at the peak of its trajectory. First, create a table with 20 rows and 4 columns named: Direction, Context, height, distance. The four columns need to be filled as follows:
+                Direction: The first 10 rows should be "up", and the next 10 rows should be "down"
+                Context: For "up" direction, a brief description of a problem context involving a small object being launched towards a target that is higher up. For example, throwing a key towards a friend on 3rd floor, kicking a ball at a target, etc. For "down" direction, a problem context involving a small object being thrown horizontally from somewhere high above (with a horizontal velocity), such as a bridge, a building, a cliff, or similar situations. For both situations, avoid soft objects such as ropes or animals. 
+                Height: A context appropriate number representing the height of either the target (for up) or the origin (for down).
+                Distance: A context appropriate number representing the horizontal distance the object lands away from the thrower.
+        - prompt 2: |
+            Next, add four columns to the table by computing the following values, using g = 9.81, height is h and distance is d:
+                v_y = \sqrt(2*g*h)
+                v_x = d/\sqrt(2h/g)
+                v = \sqrt(v_x^2 + v_y^2)
+                theta (absolute) = arctan(v_y/v_x)
+        - prompt 3: |
+            Now add two more columns to the table: "Given" and "Ask for". They should be semi-randomly selected from the following set, but obeying the rules in the parenthesis: Given: v_x, h, Ask for: v (Both up and down directions) Given: v_x, h, Ask for: d (only associated with "down" direction). Given: v_x, h, Ask for: \theta (both up and down directions) Given: v, \theta, ask for: d (only associate with "up" direction).
+
+        - prompt 4: | # Used GPT-4o for better output for the first batch. Need to upload the previously generated CSV table. Gemini-2.5 Pro yields much better results.
+            I am writing quiz problems for college introductory level physics students according to parameters given in a table. Try and write the problem text with the question for rows 6 and 7 of the attached table.
+            Only the variables in the "Given" column should be provided with numerical values. Other variables in the table should strictly not be given in the problem body. Explain each given variable, for example, \theta is the angle at which the [object] is launched, measured against the horizontal direction. For all "up" problems, if v_x is given, it should explained as being the horizontal velocity at which the object hits the target. Also point out that the object hits the target at the top of its trajectory, but don't say that the vertical velocity is zero. When the unknown variable is v or \theta, ask students to find the magnitude of velocity or launch angle.
+            Replace abstract language such as "object" and "target" with in-context language specific to the problem context. 
+            Math equations should be inline with the text. The question should not preceded by "Question:". Append the answer at the end in the form of "Answer:", using the value contained in the table.
+        - prompt 4.1: Please write the problem for rows 3-5 # GPT-4o initially and Gemini-Pro later
+        - prompt 5: Write a student facing, step by step solution for problem 1. Do not include detailed numerical calculation steps in the solution.
+        - prompt 5.1: Following the same style write solutions for problems 2 and 3
+        - prompt 5.2: Following the same style write solutions for problems 4 and 5
+        - prompt 6: | # The md output of the 5 problems were copied into an MD file and re-uploaded to chatGPT. Ask AI to generate 2 problems at a time, to prevent cutting off the solutions.
+            I have this markdown file that contains 5 problems and their corresponding solutions.
+            
+            First, at the end of the problem body add "Round your answer to 1 decimal place" (the number of decimal place should agree with the answer).
+            
+            Then translate the problems and solutions into a yaml format according to the following example 
+        # the format is in the formatting prompt
+        - prompt 6.1: | # This is specific to the generation section for problems 1-5
+            Everything else looks right, but the solution is not the same as the solution in the uploaded file. Please use the first solution in the #Solution section on the md file.
+        - formatting prompt: "../../../Templates/YAML_formatting_prompt.md" #modify as needed.
+    updates:
+      - update 1:
+        - content: updated the answer to 3 problems. q3, q4 and q5. 
+        - prompt: here is a yaml file containing projectile motion problems. Can you please check if the answer for all the problems in the bank are correct?
+    associated data:
+        - Problem Parameter Table: "./Tables/projectile_bank_with_params_and_prompts.csv" 
+    generation details: # Details of the creation process
+            model: GPT-5 (OpenAI)/Gemini-2.5 Pro  # The model used to generate the questions
+            version: 0.0.1 # The version of the model used
+            last updated: 03-06-2025 # The date of the last update of the generation prompts.
+    authors:
+        - Zhongzhou Chen
+
+questions:
+
+- numerical: # The problem type is a numerical input problem
+    id: q1
+    title: Student tossing a keychain to a balcony
+    points: 3
+    text: |
+      A student tosses a keychain up to a friend standing on a 3rd-floor balcony. 
+      The keychain reaches the balcony at the very top of its arc. 
+      It is launched with a speed of <latex>v = 14.0\ \text{m/s}</latex> at an angle <latex>\theta = 71.6^\circ</latex>, 
+      where <latex>\theta</latex> is the angle at which the keychain is launched, measured against the horizontal direction.  
+
+      How far horizontally from the student is the friend standing?  
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 6.0
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Model the motion:** The keychain reaches the balcony at the highest point of its path. Treat the motion as projectile motion with launch speed <latex>v</latex> at angle <latex>\theta</latex> above the horizontal, with negligible air resistance and constant <latex>g</latex>.
+
+          2. **Time to the top:** The time to reach the highest point is  
+          <latex>t_{\text{top}}=\frac{v\sin\theta}{g}.</latex>
+
+          3. **Horizontal speed:** The horizontal component of the launch speed is constant,  
+          <latex>v_x = v\cos\theta.</latex>
+
+          4. **Horizontal distance to the balcony:** Multiply horizontal speed by time to the top:  
+          <latex>
+          d = v_x\, t_{\text{top}} = (v\cos\theta)\left(\frac{v\sin\theta}{g}\right)
+          = \frac{v^2\sin\theta\cos\theta}{g}
+          = \frac{v^2\sin(2\theta)}{2g}.
+          </latex>
+
+          5. **Evaluate with the given values:** Using <latex>v=14.0\ \text{m/s}</latex>, <latex>\theta=71.6^\circ</latex>, and <latex>g=9.81\ \text{m/s}^2</latex>, this yields the horizontal distance from the student to the friend on the balcony.
+
+          **Answer:** <latex>6.0\ \text{m}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+
+- numerical: # The problem type is a numerical input problem
+    id: q2
+    title: Soccer player kicking a ball at a stadium banner
+    points: 3
+    text: |
+      A soccer player kicks a ball toward a banner hanging high on the stadium wall. 
+      The ball reaches the banner at the top of its trajectory. 
+      The banner is located at a vertical height of <latex>h = 12.0\ \text{m}</latex>, 
+      and the horizontal velocity of the ball when it strikes the banner is <latex>v_x = 9.59\ \text{m/s}</latex>.  
+
+      What is the magnitude of the ball’s launch velocity <latex>v</latex>?  
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 18.1
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          **Step-by-step solution for Problem 2 (soccer ball to stadium banner)**
+
+          1. **Model the motion:** The banner is reached at the top of the ball’s flight. Treat this as projectile motion with constant horizontal speed <latex>v_x</latex> and constant gravitational acceleration <latex>g</latex>.
+
+          2. **Relate height to the vertical launch component:** The vertical rise from launch to the top is <latex>h</latex>. For projectile motion, the vertical launch component satisfies  
+          <latex>
+          h=\frac{(v_y)^2}{2g}\quad\Rightarrow\quad v_y=\sqrt{2gh}.
+          </latex>
+
+          3. **Combine components to get the launch speed:** The launch speed <latex>v</latex> is found from the Pythagorean combination of horizontal and vertical components:  
+          <latex>
+          v=\sqrt{v_x^2+v_y^2}=\sqrt{v_x^2+2gh}.
+          </latex>
+
+          4. **Substitute the given values:** Use <latex>h=12.0\ \text{m}</latex>, <latex>v_x=9.59\ \text{m/s}</latex>, and <latex>g=9.81\ \text{m/s}^2</latex> to evaluate <latex>v</latex>.
+
+          **Answer:** <latex>18.1\ \text{m/s}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+
+- numerical: # The problem type is a numerical input problem
+    id: q3
+    title: Worker throwing a wrench up to scaffolding
+    points: 3
+    text: |
+      A construction worker throws a wrench up to a colleague standing on scaffolding. 
+      The wrench reaches the scaffolding at the very top of its trajectory. 
+      The scaffolding is located at a vertical height of <latex>h = 8.0\ \text{m}</latex>, 
+      and the horizontal velocity of the wrench when it reaches the scaffolding is <latex>v_x = 4.23\ \text{m/s}</latex>.  
+
+      What is the magnitude of the wrench’s launch velocity <latex>v</latex>?  
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 13.2
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          **Step-by-step solution for Problem 3 (wrench to scaffolding)**
+
+          1. **Model the motion:** The wrench reaches the scaffolding at the top of its flight. Use projectile motion with constant horizontal speed <latex>v_x</latex> and constant gravitational acceleration <latex>g</latex>.
+
+          2. **Relate height to the vertical launch component:** The scaffolding is at height <latex>h</latex>. The vertical launch component satisfies  
+          <latex>
+          h=\frac{(v_y)^2}{2g}\quad\Rightarrow\quad v_y=\sqrt{2gh}.
+          </latex>
+
+          3. **Combine components to get the launch speed:** The launch speed <latex>v</latex> is the magnitude formed by horizontal and vertical components:  
+          <latex>
+          v=\sqrt{v_x^2+v_y^2}=\sqrt{v_x^2+2gh}.
+          </latex>
+
+          4. **Substitute the given values:** Use <latex>h=8.0\ \text{m}</latex>, <latex>v_x=4.23\ \text{m/s}</latex>, and <latex>g=9.81\ \text{m/s}^2</latex> to evaluate <latex>v</latex>.
+
+          **Answer:** <latex>13.0\ \text{m/s}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical: # The problem type is a numerical input problem
+    id: q4
+    title: Basketball player shooting at a target above the hoop
+    points: 3
+    text: |
+      A basketball player takes a shot at a target mounted on the wall above the hoop. 
+      The ball reaches the target at the very top of its trajectory. 
+      It is launched with a speed of <latex>v = 9.58\ \text{m/s}</latex> at an angle <latex>\theta = 71.0^\circ</latex>, 
+      where <latex>\theta</latex> is the angle at which the basketball is launched, measured against the horizontal direction.
+
+      How far horizontally from the player is the target?  
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 2.9
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          **Step-by-step solution for Problem 4 (basketball to a target above the hoop)**
+
+          1. **Model the motion:** The ball reaches the wall target at the very top of its path. Treat this as projectile motion with launch speed <latex>v</latex> at angle <latex>\theta</latex> and constant acceleration <latex>g</latex>.
+
+          2. **Time to the top:** The time to reach the top is <latex>t_{\text{top}}=\dfrac{v\sin\theta}{g}</latex>.
+
+          3. **Horizontal speed:** The horizontal component of the launch speed is constant: <latex>v_x=v\cos\theta</latex>.
+
+          4. **Horizontal distance to the target:** Multiply horizontal speed by time to the top:
+          <latex>
+          d=v_x\,t_{\text{top}}=(v\cos\theta)\left(\frac{v\sin\theta}{g}\right)
+          =\frac{v^2\sin\theta\cos\theta}{g}
+          =\frac{v^2\sin(2\theta)}{2g}.
+          </latex>
+
+          5. **Evaluate with the given values:** Use <latex>v=9.58\ \text{m/s}</latex>, <latex>\theta=71.0^\circ</latex>, and <latex>g=9.81\ \text{m/s}^2</latex> to obtain the horizontal distance from the player to the target.
+
+          **Answer:** <latex>3.0\ \text{m}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+
+- numerical: # The problem type is a numerical input problem
+    id: q5
+    title: Child throwing a toy airplane to a playground ledge
+    points: 3
+    text: |
+      A child throws a toy airplane toward a ledge above the playground. 
+      The airplane reaches the ledge at the highest point of its flight. 
+      The ledge is at a vertical height of <latex>h = 5.0\ \text{m}</latex>, and the horizontal velocity of the airplane when it reaches the ledge is <latex>v_x = 5.57\ \text{m/s}</latex>.
+
+      What is the angle <latex>\theta</latex> at which the airplane was launched, measured against the horizontal direction?  
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 60.6
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          **Step-by-step solution for Problem 5 (toy airplane to a playground ledge)**
+
+          1. **Model the motion:** The airplane reaches the ledge at the top of its trajectory. The horizontal velocity at the ledge is the same as at launch and is given as <latex>v_x</latex>. Gravity is <latex>g</latex>.
+
+          2. **Find the vertical launch component:** The rise to the top equals the launch vertical energy contribution, so
+          <latex>
+          h=\frac{(v_y)^2}{2g}\quad\Rightarrow\quad v_y=\sqrt{2gh}.
+          </latex>
+
+          3. **Relate launch angle to components:** The launch angle satisfies <latex>\tan\theta=\dfrac{v_y}{v_x}</latex>. Here, for “up” problems, <latex>v_x</latex> is the horizontal velocity when the airplane reaches the ledge (which equals its horizontal launch component).
+
+          4. **Evaluate the angle:** Substitute <latex>h=5.0\ \text{m}</latex> into <latex>v_y=\sqrt{2gh}</latex>, then use <latex>\theta=\arctan\!\left(\dfrac{v_y}{v_x}\right)</latex> with <latex>v_x=5.57\ \text{m/s}</latex>.
+
+          **Answer:** <latex>67.3^\circ</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+
+- numerical: # The problem type is a numerical input problem
+    id: q6
+    title: Launch Angle of a Water Bottle
+    points: 3
+    text: |
+      A person tosses a water bottle to a friend leaning from a window. The water bottle reaches the top of its trajectory as it reaches the friend's window, which is at a height of <latex>h = 6.0 \text{ m}</latex> above the point of release. The horizontal component of the water bottle's velocity when it reaches the window is <latex>v_x = 3.62 \text{ m/s}</latex>. Here, <latex>h</latex> is the vertical height and <latex>v_x</latex> is the horizontal velocity at which the water bottle is caught. What is the launch angle, <latex>\theta</latex>, of the water bottle, measured with respect to the horizontal?  
+
+      Round your answer to 1 decimal place
+    answer:
+        value: 71.6
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          ### Solving for the Launch Angle 
+
+          This problem asks for the initial launch angle (<latex>\theta</latex>) of the water bottle. We can find it by determining the initial horizontal (<latex>v_{0x}</latex>) and vertical (<latex>v_{0y}</latex>) components of the velocity and using trigonometry.
+
+          **Step 1: Analyze the Motion**  
+          Break the problem into two parts: horizontal and vertical.  
+          * In the horizontal direction, velocity (<latex>v_x</latex>) is constant.  
+          * In the vertical direction, gravity acts with <latex>g = 9.8 \text{ m/s}^2</latex>.  
+
+          At the top of the trajectory, the vertical velocity is momentarily zero (<latex>v_y = 0</latex>).  
+
+          **Step 2: Find the Initial Velocity Components**  
+          * Horizontal velocity: <latex>v_{0x} = v_x = 3.62 \text{ m/s}</latex>.  
+          * Vertical velocity: Use <latex>v_y^2 = v_{0y}^2 + 2a\Delta y</latex> with <latex>v_y=0</latex>, <latex>\Delta y = h</latex>, and <latex>a=-g</latex> to find <latex>v_{0y}</latex>.  
+
+          **Step 3: Calculate the Launch Angle (<latex>\theta</latex>)**  
+          With both components, apply the tangent function:  
+          <latex>\tan(\theta) = \frac{v_{0y}}{v_{0x}}</latex>  
+
+          Finally, take the inverse tangent to solve for <latex>\theta</latex>, giving the launch angle of about **71.6°**.
+
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical: # The problem type is a numerical input problem
+    id: q7
+    title: Horizontal Distance of a Carabiner
+    points: 3
+    text: |
+      A climber throws a carabiner to a partner higher on the rock wall. The carabiner is thrown with an initial velocity of <latex>v = 15.1 \text{ m/s}</latex> at an angle of <latex>\theta = 68.2^\circ</latex>. Here, <latex>v</latex> is the magnitude of the initial velocity and <latex>\theta</latex> is the angle at which the carabiner is launched, measured against the horizontal direction. If the carabiner is caught at the peak of its trajectory, what is the horizontal distance, <latex>d</latex>, between the two climbers?  
+
+      Round your answer to 1 decimal place
+    answer:
+        value: 8.0
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          ### Solving for the Horizontal Distance 
+
+          This problem asks for the horizontal distance (<latex>d</latex>) the carabiner travels. To find this, calculate how long it is in the air and how far it moves horizontally.  
+
+          **Step 1: Find the Initial Velocity Components**  
+          Use trigonometry:  
+          * <latex>v_{0x} = v \cos(\theta)</latex>  
+          * <latex>v_{0y} = v \sin(\theta)</latex>  
+
+          **Step 2: Find the Time of Flight to the Peak**  
+          At the peak, <latex>v_y = 0</latex>. Using <latex>v_y = v_{0y} + at</latex>, solve for time <latex>t</latex> with <latex>a = -g</latex>.  
+
+          **Step 3: Calculate the Horizontal Distance (<latex>d</latex>)**  
+          Since horizontal velocity is constant,  
+          <latex>d = v_{0x} \times t</latex>.  
+
+          Substituting values gives a horizontal distance of about **8.0 m**.
+
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+
+- numerical: # The problem type is a numerical input problem
+    id: q8
+    title: Launch Velocity of a Festival Ring
+    points: 3
+    text: |
+      In a festival game, a player tosses a ring to land on a shelf. The ring reaches the top of its trajectory as it arrives at the shelf, which is at a height of <latex>h = 3.0 \text{ m}</latex> above the point of release. The horizontal velocity of the ring as it lands on the shelf is <latex>v_x = 2.56 \text{ m/s}</latex>. Here, <b><latex>h</latex> is the vertical height</b> of the shelf, and <b><latex>v_x</latex> is the horizontal velocity</b> at which the ring reaches the shelf. What is the magnitude of the ring's initial launch velocity, <latex>v</latex>?  
+
+      Round your answer to 1 decimal place
+    answer:
+        value: 8.1
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Step 1: Analyze the Goal
+          The magnitude of the initial velocity, <latex>v</latex>, is the hypotenuse of a right triangle formed by its initial horizontal (<latex>v_{0x}</latex>) and vertical (<latex>v_{0y}</latex>) components.  
+          <latex>v = \sqrt{v_{0x}^2 + v_{0y}^2}</latex>  
+
+          Step 2: Find the Initial Velocity Components
+          The ring is caught at the <b>top of its trajectory</b>, so <latex>v_y = 0</latex>.  
+          * <b>Initial Horizontal Velocity (<latex>v_{0x}</latex>):</b> constant, so <latex>v_{0x} = v_x = 2.56 \text{ m/s}</latex>.  
+          * <b>Initial Vertical Velocity (<latex>v_{0y}</latex>):</b> use <latex>v_y^2 = v_{0y}^2 + 2a\Delta y</latex> with <latex>v_y=0</latex>, <latex>\Delta y = h</latex>, and <latex>a=-g</latex>.  
+
+          Step 3: Combine the Components
+          Substitute <latex>v_{0x}</latex> and <latex>v_{0y}</latex> into the Pythagorean theorem.  
+          This yields a launch velocity of about **8.1 m/s**.
+
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical: # The problem type is a numerical input problem
+    id: q9
+    title: Launch Angle of a Tennis Ball
+    points: 3
+    text: |
+      A tennis player lobs a ball to hit a hanging target. The ball hits the target at the top of its trajectory, which is at a height of <latex>h = 4.5 \text{ m}</latex> above the point it was struck. The horizontal velocity of the ball when it hits the target is <latex>v_x = 6.26 \text{ m/s}</latex>. In this case, <b><latex>h</latex> is the vertical height</b> of the target, and <b><latex>v_x</latex> is the horizontal velocity</b> of the ball when it reaches the target. What is the launch angle, <latex>\theta</latex>, of the tennis ball, measured with respect to the horizontal?  
+
+      Round your answer to 1 decimal place
+    answer:
+        value: 56.3
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          Step 1: Analyze the Motion
+          Motion separates into horizontal (constant velocity) and vertical (constant acceleration, <latex>-g</latex>). At the <b>peak of its flight</b>, the vertical velocity is zero (<latex>v_y=0</latex>).  
+
+          Step 2: Find the Initial Velocity Components
+          * <b>Initial Horizontal Velocity (<latex>v_{0x}</latex>):</b> since no horizontal acceleration, <latex>v_{0x} = v_x = 6.26 \text{ m/s}</latex>.  
+          * <b>Initial Vertical Velocity (<latex>v_{0y}</latex>):</b> use <latex>v_y^2 = v_{0y}^2 + 2a\Delta y</latex> with <latex>v_y=0</latex>, <latex>\Delta y = h</latex>, and <latex>a=-g</latex>.  
+
+          Step 3: Calculate the Launch Angle (<latex>\theta</latex>)
+          Once <latex>v_{0x}</latex> and <latex>v_{0y}</latex> are known,  
+          <latex>\tan(\theta) = \frac{v_{0y}}{v_{0x}}</latex>.  
+          Take the inverse tangent to find the angle, which is about **56.3°**.
+
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+
+- numerical: # The problem type is a numerical input problem
+    id: q10
+    title: Horizontal Distance of a Tossed Package
+    points: 3
+    text: |
+      A courier tosses a small package up to a colleague on a balcony. The package is thrown with an initial velocity of <latex>v = 12.4 \text{ m/s}</latex> at an angle of <latex>\theta = 70.3^\circ</latex>. For this scenario, <b><latex>v</latex> is the magnitude of the initial velocity</b>, and <b><latex>\theta</latex> is the angle at which the package is launched</b>, measured against the horizontal direction. If the colleague catches the package at the peak of its trajectory, what is the horizontal distance, <latex>d</latex>, between the courier and the balcony?  
+
+      Round your answer to 1 decimal place
+    answer:
+        value: 5.0
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          #### Step 1: Find the Initial Velocity Components
+          You are given <latex>v = 12.4 \text{ m/s}</latex> and <latex>\theta = 70.3^\circ</latex>.  
+          Use trigonometry:  
+          * <b>Horizontal component:</b> <latex>v_{0x} = v \cos(\theta)</latex>  
+          * <b>Vertical component:</b> <latex>v_{0y} = v \sin(\theta)</latex>  
+
+          #### Step 2: Find the Time of Flight to the Peak
+          At the <b>top of the trajectory</b>, the vertical velocity becomes zero (<latex>v_y = 0</latex>).  
+          Using <latex>v_y = v_{0y} + at</latex> with <latex>a = -g</latex>, solve for the time <latex>t</latex> to reach the peak.  
+
+          #### Step 3: Calculate the Horizontal Distance (<latex>d</latex>)
+          Since horizontal velocity is constant,  
+          <latex>d = v_{0x} \times t</latex>.  
+
+          Substituting the values gives a horizontal distance of about **5.0 m**.
+
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q11
+    title: Tennis ball launched from bleachers
+    points: 3
+    text: |
+      A student drops a tennis ball from the top of school bleachers, which are at a height, <latex>h</latex>, of 6.0 m above the ground. 
+      The ball is launched horizontally with a constant horizontal velocity, <latex>v_x</latex>, of 8.14 m/s. 
+      
+      Calculate the magnitude of the total velocity, <latex>v</latex>, of the tennis ball just before it strikes the ground.
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 13.6
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** First, break down the tennis ball's motion into two independent parts: horizontal (x-direction) and vertical (y-direction). The horizontal velocity <latex>v_x</latex> remains constant. The vertical motion starts with <latex>v_{y,0} = 0</latex> and accelerates downwards due to gravity (<latex>a_y = -g \approx -9.8 \, \text{m/s}^2</latex>).
+
+          2. **Find the Time of Flight (t):** The time the ball is in the air is determined by its vertical motion. Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex>, where <latex>\Delta y = -h</latex>, to solve for the time, <latex>t</latex>.
+
+          3. **Find the Final Vertical Velocity (<latex>v_y</latex>):** With the time of flight, calculate the ball's final vertical velocity component using the equation <latex>v_y = v_{y,0} + a_y t</latex>.
+
+          4. **Combine the Velocity Components:** The final velocity magnitude, <latex>v</latex>, is the vector sum of its components. Since the horizontal and vertical components are perpendicular, use the Pythagorean theorem: <latex>v = \sqrt{v_x^2 + v_y^2}</latex>.
+
+          **Answer:** <latex>13.6\ \text{m/s}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q12
+    title: Stone thrown horizontally from a bridge
+    points: 3
+    text: |
+      A person throws a stone horizontally off a bridge. The height of the bridge, <latex>h</latex>, is 12.0 m above the water below. 
+      The stone's initial and constant horizontal velocity, <latex>v_x</latex>, is 11.5 m/s. 
+      
+      Find the angle, <latex>\theta</latex>, that the stone's final velocity vector makes with the horizontal at the instant it hits the water.
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 53.1
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** Separate the motion into horizontal (x) and vertical (y) components. The horizontal velocity <latex>v_x</latex> is constant. The vertical motion starts at rest (<latex>v_{y,0} = 0</latex>) and accelerates downwards due to gravity.
+
+          2. **Find the Time of Flight (t):** The time is determined by the vertical fall from height <latex>h</latex>. Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for <latex>t</latex>.
+
+          3. **Find the Final Vertical Velocity (<latex>v_y</latex>):** Use the time of flight to find the final vertical velocity component just before impact using <latex>v_y = v_{y,0} + a_y t</latex>.
+
+          4. **Use Trigonometry to Find the Angle:** The final velocity vector's components, <latex>v_x</latex> and <latex>v_y</latex>, form a right triangle. The angle <latex>\theta</latex> with the horizontal can be found using the inverse tangent function: <latex>\theta = \arctan\left(\frac{|v_y|}{v_x}\right)</latex>.
+
+          **Answer:** <latex>53.1^\circ</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q13
+    title: Bottle tossed from a cliff by a cyclist
+    points: 3
+    text: |
+      A cyclist riding along the edge of a cliff tosses a water bottle forward horizontally. 
+      The cliff's height, <latex>h</latex>, is 20.0 m above the ground below. 
+      The bottle leaves the cyclist's hand with a constant horizontal velocity, <latex>v_x</latex>, of 12.4 m/s. 
+      
+      Calculate the horizontal distance, <latex>d</latex>, the bottle travels from the edge of the cliff before it lands.
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 25.0
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** The problem can be separated into two parts: horizontal motion with constant velocity and vertical motion with constant downward acceleration.
+
+          2. **Find the Time of Flight (t):** The key is to first find how long the bottle is in the air. This time is determined solely by the vertical motion (falling from height <latex>h</latex> with <latex>v_{y,0} = 0</latex>). Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for <latex>t</latex>.
+
+          3. **Calculate the Horizontal Distance (d):** Once the time of flight is known, the horizontal distance (range) can be calculated. Since the horizontal velocity is constant, the distance is simply <latex>d = v_x \times t</latex>.
+
+          **Answer:** <latex>25.0\ \text{m}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q14
+    title: Bolt dropped from a crane platform
+    points: 3
+    text: |
+      An engineer working on a crane platform drops a bolt. The platform is at a height, <latex>h</latex>, of 15.0 m above the ground. 
+      The bolt is released with an initial horizontal velocity, <latex>v_x</latex>, of 5.72 m/s. 
+      
+      What is the magnitude of the bolt's total velocity, <latex>v</latex>, at the moment it reaches the ground?
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 18.1
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** Break the problem down into the horizontal and vertical parts of the bolt's motion. The horizontal velocity <latex>v_x</latex> is constant. The vertical motion begins with <latex>v_{y,0} = 0</latex> and accelerates downwards from height <latex>h</latex> due to gravity.
+
+          2. **Find the Time of Flight (t):** The time it takes the bolt to fall is determined by its vertical motion. Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for the time, <latex>t</latex>.
+
+          3. **Find the Final Vertical Velocity (<latex>v_y</latex>):** Use the time of flight to determine the final vertical velocity component just before impact using the equation <latex>v_y = v_{y,0} + a_y t</latex>.
+
+          4. **Combine the Velocity Components:** The final velocity magnitude <latex>v</latex> is the vector sum of its perpendicular components, <latex>v_x</latex> and <latex>v_y</latex>. Use the Pythagorean theorem to find the magnitude: <latex>v = \sqrt{v_x^2 + v_y^2}</latex>.
+
+          **Answer:** <latex>18.1\ \text{m/s}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q15
+    title: Ball rolled off a two-story house
+    points: 3
+    text: |
+      A ball is rolled off the roof of a 2-story house. The edge of the roof is at a height, <latex>h</latex>, of 8.0 m from the ground. 
+      The ball rolls off with a horizontal velocity, <latex>v_x</latex>, of 4.7 m/s. 
+      
+      Determine the angle, <latex>\theta</latex>, that the ball's final velocity vector makes with the horizontal just before it lands on the ground.
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 69.4
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** Separate the motion into its horizontal (constant velocity <latex>v_x</latex>) and vertical (initial velocity <latex>v_{y,0}=0</latex>, constant downward acceleration <latex>g</latex>) components.
+
+          2. **Find the Time of Flight (t):** First, determine how long the ball is airborne. This depends only on the vertical fall from height <latex>h</latex>. Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for <latex>t</latex>.
+
+          3. **Find the Final Vertical Velocity (<latex>v_y</latex>):** Use the time of flight to find the vertical component of the ball's velocity at the moment it reaches the ground. The relevant formula is <latex>v_y = v_{y,0} + a_y t</latex>.
+
+          4. **Use Trigonometry to Find the Angle:** The final velocity vector is composed of the components <latex>v_x</latex> and <latex>v_y</latex>. To find the angle <latex>\theta</latex> this vector makes with the horizontal, use the inverse tangent function: <latex>\theta = \arctan\left(\frac{|v_y|}{v_x}\right)</latex>.
+
+          **Answer:** <latex>69.4^\circ</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+     
+- numerical:
+    id: q16
+    title: Toy car launched from a lab bench
+    points: 3
+    text: |
+      A student launches a toy car horizontally from a laboratory bench. The bench has a height, <latex>h</latex>, of 1.2 m.
+      The toy car is launched with a constant horizontal velocity, <latex>v_x</latex>, of 3.64 m/s. 
+      
+      Calculate the horizontal distance, <latex>d</latex>, the car travels before it hits the floor.
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 1.8
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** The problem can be separated into two parts: horizontal motion with constant velocity (<latex>v_x</latex>) and vertical motion with constant downward acceleration (<latex>a_y = -g</latex>).
+
+          2. **Find the Time of Flight (t):** The time the car is in the air is determined solely by the vertical motion (falling from height <latex>h</latex> with an initial vertical velocity of zero). Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for <latex>t</latex>.
+
+          3. **Calculate the Horizontal Distance (d):** With the time of flight known, calculate the horizontal distance (range). Since the horizontal velocity is constant, the distance is simply <latex>d = v_x \times t</latex>.
+
+          **Answer:** <latex>1.8\ \text{m}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q17
+    title: Hiker kicks a rock from a ledge
+    points: 3
+    text: |
+      A hiker kicks a rock horizontally from a ledge. The ledge has a height, <latex>h</latex>, of 10.0 m above the ground. 
+      The rock is kicked with an initial horizontal velocity, <latex>v_x</latex>, of 4.9 m/s. 
+      
+      What is the magnitude of the rock's total velocity, <latex>v</latex>, at the moment it strikes the ground?
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 14.8
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** Break the problem down into the horizontal and vertical parts of the rock's motion. The horizontal velocity <latex>v_x</latex> is constant. The vertical motion begins with <latex>v_{y,0} = 0</latex> and accelerates downwards from height <latex>h</latex> due to gravity.
+
+          2. **Find the Time of Flight (t):** The time it takes the rock to fall is determined by its vertical motion. Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for the time, <latex>t</latex>.
+
+          3. **Find the Final Vertical Velocity (<latex>v_y</latex>):** Use the time of flight to determine the final vertical velocity component just before impact using the equation <latex>v_y = v_{y,0} + a_y t</latex>.
+
+          4. **Combine the Velocity Components:** The final velocity magnitude <latex>v</latex> is the vector sum of its perpendicular components, <latex>v_x</latex> and <latex>v_y</latex>. Use the Pythagorean theorem to find the magnitude: <latex>v = \sqrt{v_x^2 + v_y^2}</latex>.
+
+          **Answer:** <latex>14.8\ \text{m/s}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q18
+    title: Ball thrown from a theater stage
+    points: 3
+    text: |
+      A ball is thrown forward horizontally from a raised theater stage. The stage has a height, <latex>h</latex>, of 2.0 m.
+      The ball is thrown with a constant horizontal velocity, <latex>v_x</latex>, of 4.7 m/s. 
+      
+      Find the angle, <latex>\theta</latex>, that the ball's final velocity vector makes with the horizontal at the instant it lands.
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 53.1
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** Separate the motion into horizontal (x) and vertical (y) components. The horizontal velocity <latex>v_x</latex> is constant. The vertical motion starts at rest (<latex>v_{y,0} = 0</latex>) and accelerates downwards due to gravity.
+
+          2. **Find the Time of Flight (t):** The time is determined by the vertical fall from height <latex>h</latex>. Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for <latex>t</latex>.
+
+          3. **Find the Final Vertical Velocity (<latex>v_y</latex>):** Use the time of flight to find the final vertical velocity component just before impact using <latex>v_y = v_{y,0} + a_y t</latex>.
+
+          4. **Use Trigonometry to Find the Angle:** The final velocity vector's components, <latex>v_x</latex> and <latex>v_y</latex>, form a right triangle. The angle <latex>\theta</latex> with the horizontal can be found using the inverse tangent function: <latex>\theta = \arctan\left(\frac{|v_y|}{v_x}\right)</latex>.
+
+          **Answer:** <latex>53.1^\circ</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q19
+    title: Skater pushes a puck off a ramp
+    points: 3
+    text: |
+      A skater pushes a puck horizontally off the end of a raised ramp. The ramp's edge has a height, <latex>h</latex>, of 1.5 m. 
+      The puck is pushed with a constant horizontal velocity, <latex>v_x</latex>, of 4.52 m/s. 
+      
+      Calculate the horizontal distance, <latex>d</latex>, the puck travels before it hits the ground.
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 2.5
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** The motion can be separated into two independent parts: horizontal motion with constant velocity and vertical motion with constant downward acceleration.
+
+          2. **Find the Time of Flight (t):** To find the horizontal distance, you must first find how long the puck is in the air. This time is determined by the vertical motion (falling from height <latex>h</latex>). Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for <latex>t</latex>.
+
+          3. **Calculate the Horizontal Distance (d):** Once the time of flight is known, calculate the horizontal distance. Since the horizontal velocity is constant, the distance is <latex>d = v_x \times t</latex>.
+
+          **Answer:** <latex>2.5\ \text{m}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!
+
+- numerical:
+    id: q20
+    title: Geologist flicks a pebble off a cliff
+    points: 3
+    text: |
+      A geologist flicks a pebble horizontally off a cliff. The cliff has a height, <latex>h</latex>, of 25.0 m.
+      The pebble is flicked with an initial horizontal velocity, <latex>v_x</latex>, of 8.86 m/s. 
+      
+      What is the magnitude of the pebble's total velocity, <latex>v</latex>, at the moment it hits the ground below?
+      Round your answer to 1 decimal place.
+
+    answer:
+        value: 23.9
+        margin_type: percent
+        tolerance: 3
+    feedback:
+        general: |
+          1. **Analyze the Components of Motion:** Break the motion into its horizontal and vertical components. The horizontal velocity <latex>v_x</latex> is constant. The vertical motion starts with zero initial velocity (<latex>v_{y,0} = 0</latex>) and accelerates downwards from height <latex>h</latex>.
+
+          2. **Find the Time of Flight (t):** The time the pebble takes to fall to the ground is determined by its vertical motion. Use the kinematic equation <latex>\Delta y = v_{y,0}t + \frac{1}{2}a_y t^2</latex> to solve for the time, <latex>t</latex>.
+
+          3. **Find the Final Vertical Velocity (<latex>v_y</latex>):** Use the time of flight to determine the final vertical velocity component just before impact using the equation <latex>v_y = v_{y,0} + a_y t</latex>.
+
+          4. **Combine the Velocity Components:** The final velocity magnitude <latex>v</latex> is the vector sum of its perpendicular components, <latex>v_x</latex> and <latex>v_y</latex>. Use the Pythagorean theorem to find the magnitude: <latex>v = \sqrt{v_x^2 + v_y^2}</latex>.
+
+          **Answer:** <latex>23.9\ \text{m/s}</latex>
+        on_correct: Good job!
+        on_incorrect: Try again!

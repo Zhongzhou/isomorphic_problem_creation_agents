@@ -1,0 +1,95 @@
+name: Catalog site
+
+# Push to main: check the catalog, package published forms, build _site/ and deploy it
+# to GitHub Pages. Push a tag <agent>/v<version> or <agent>-<form>/v<version>: package
+# that agent and attach its zips to a GitHub Release (never for a draft agent).
+
+on:
+  push:
+    branches: [main]
+    tags: ["*/v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - run: python scripts/check_catalog.py
+      - run: python scripts/package_forms.py
+      - run: python scripts/build_site.py
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/')
+        with:
+          path: _site
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zips
+          path: dist/*.zip
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - name: Package the tagged agent
+        id: tag
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os, sys
+          sys.path.insert(0, "scripts")
+          from check_catalog import load_catalog
+          tag = os.environ["GITHUB_REF_NAME"]              # multiple-choice/v0.1.0
+          name, _, version = tag.partition("/v")
+          agents = {a["id"]: a for a in load_catalog()}
+          agent_id, form_id = name, None
+          if agent_id not in agents:                        # multiple-choice-cursor/v0.1.0
+              agent_id, _, form_id = name.rpartition("-")
+          agent = agents.get(agent_id)
+          if agent is None:
+              sys.exit(f"tag {tag} names no agent under agents/")
+          want = (agent["version"] if form_id is None
+                  else next((f["version"] for f in agent["forms"] if f["id"] == form_id), None))
+          if want != version:
+              sys.exit(f"tag {tag} does not match agent.yaml ({want})")
+          print(f"draft={'true' if agent['status'] == 'draft' else 'false'}")
+          zips = [f"dist/{agent['id']}-{f['id']}-{f['version']}.zip" for f in agent["forms"]
+                  if form_id is None or f["id"] == form_id]
+          print(f"zips={' '.join(zips)}")
+          PY
+      - if: steps.tag.outputs.draft == 'false'
+        run: python scripts/package_forms.py
+      - if: steps.tag.outputs.draft == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" ${{ steps.tag.outputs.zips }} --title "$GITHUB_REF_NAME" --notes "Packaged from agents/ at $GITHUB_REF_NAME."
