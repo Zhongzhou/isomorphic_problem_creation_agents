@@ -2,7 +2,7 @@
 
 This repository is an open catalog of AI agents that generate isomorphic physics problem banks: collections of problems that test the same learning objectives, with variations that change the solution and not only the numbers. It also holds the PHY I Mechanics banks as worked examples of the bank format.
 
-**Browse and download the agents at <https://zhongzhou.github.io/isomorphic-bank-creation-agents/>.** Agents are downloaded and installed in your own project. They are not installed in this repository, and the site does not run them.
+**Browse and download the agents at <https://zhongzhou.github.io/isomorphic_problem_creation_agents/>.** Agents are downloaded and installed in your own project. They are not installed in this repository, and the site does not run them.
 
 ## Agents
 
